@@ -3,11 +3,8 @@ FROM mozilla/sbt:8u232_1.3.13 AS builder
 
 # ADD all source
 ADD . /
-# Run SBT clean and test, if tests fail, the docker image will not build
-RUN sbt clean test
-
-# Build uber-jar, skipping tests --- I already ran them above
-RUN sbt 'set test in assembly := {}' assembly
+# Run SBT assembly, if tests fail, the docker image will not build
+RUN sbt assembly
 
 # Second stage, OpenJDK for JVM runtime
 FROM adoptopenjdk/openjdk11:jdk-11.0.7_10-debian-slim
